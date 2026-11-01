@@ -1820,27 +1820,36 @@ const SCENES={
 const sovOv=document.getElementById('scene-ov');
 const sovStepsEl=document.getElementById('sovSteps');
 const sovStageEl=document.getElementById('sovStage');
-let sovScene=null,sovStepIx=0,sovTimer=null,voiceOn=true,curAudio=null;
+let sovScene=null,sovStepIx=0,sovTimer=null,voiceOn=true;
+const voiceAudio=new Audio();voiceAudio.preload='auto';
+let audioUnlocked=false;
+function unlockAudio(){
+  if(audioUnlocked)return;audioUnlocked=true;
+  try{const m=new Audio();m.muted=true;m.play().catch(()=>{});}catch(e){}
+}
+['pointerdown','touchstart','keydown'].forEach(ev=>document.addEventListener(ev,unlockAudio,{once:true,passive:true}));
+function preloadVoices(sc){
+  sc.steps.forEach(st=>{if(st.vf){try{const p=new Audio('voice/'+st.vf+'.mp3');p.preload='auto';p.load();}catch(e){}}});
+}
 function pickVoice(){
   if(!('speechSynthesis' in window))return null;
   const vs=speechSynthesis.getVoices();
   const zh=vs.filter(v=>/^zh|cmn/i.test(v.lang));
-  return zh.find(v=>/xiaoxiao|xiaoyi|huihui|tingting|ting-ting|yaoyao|shuangshu/i.test(v.name))
-      ||zh.find(v=>!/(yunyang|yunye|kangkang|yunxi|male|男)/i.test(v.name))
-      ||zh[0]||null;
+  /* 只认中文女声：找不到就返回 null，宁可不合成也不出怪声 */
+  return zh.find(v=>/xiaoxiao|xiaoyi|huihui|tingting|ting-ting|yaoyao|shuangshu|meijia|sinji|female|女/i.test(v.name))||null;
 }
 function speak(txt){
   if(!voiceOn||!('speechSynthesis' in window))return;
+  const v=pickVoice();if(!v)return;
   try{
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(txt);
-    u.lang='zh-CN';u.rate=1.05;u.pitch=1.12;
-    const v=pickVoice();if(v)u.voice=v;
+    u.lang='zh-CN';u.rate=1.05;u.pitch=1.12;u.voice=v;
     speechSynthesis.speak(u);
   }catch(e){}
 }
 function stopVoice(){
-  if(curAudio){curAudio.pause();curAudio=null;}
+  try{voiceAudio.pause();}catch(e){}
   if('speechSynthesis' in window)speechSynthesis.cancel();
   const vb=document.getElementById('sovVoice');
   if(vb)vb.classList.remove('playing');
@@ -1849,19 +1858,19 @@ function playVoice(st){
   stopVoice();
   if(!voiceOn)return;
   document.getElementById('sovVoice').classList.add('playing');
+  const nextStep=()=>{
+    document.getElementById('sovVoice').classList.remove('playing');
+    clearTimeout(sovTimer);
+    const sc=SCENES[sovScene];
+    if(sc)sovTimer=setTimeout(()=>sovShow((sovStepIx+1)%sc.steps.length),1100);
+  };
   const fallback=()=>speak(st.speak||st.t);
   if(st.vf){
     try{
-      const a=new Audio('voice/'+st.vf+'.mp3');
-      a.addEventListener('error',fallback);
-      a.addEventListener('ended',()=>{
-        document.getElementById('sovVoice').classList.remove('playing');
-        clearTimeout(sovTimer);
-        const sc=SCENES[sovScene];
-        if(sc)sovTimer=setTimeout(()=>sovShow((sovStepIx+1)%sc.steps.length),1100);
-      });
-      curAudio=a;
-      a.play().catch(fallback);
+      voiceAudio.src='voice/'+st.vf+'.mp3';
+      voiceAudio.onended=nextStep;
+      voiceAudio.onerror=()=>{voiceAudio.onended=null;fallback();};
+      voiceAudio.play().catch(()=>{voiceAudio.onended=null;fallback();});
       return;
     }catch(e){}
   }
@@ -1894,8 +1903,9 @@ function sovOpen(key){
   const sc=SCENES[key];
   document.getElementById('sovKicker').textContent=sc.no;
   document.getElementById('sovTitle').textContent=sc.title;
+  preloadVoices(sc);
   sovStepsEl.innerHTML=sc.steps.map((s,i)=>'<button class="sov-step" data-i="'+i+'"><span class="n">0'+(i+1)+'</span>'+s.t+'</button>').join('');
-  [...sovStepsEl.children].forEach(el=>el.addEventListener('click',()=>sovShow(+el.dataset.i)));
+  [...sovStepsEl.children].forEach(el=>el.addEventListener('click',()=>{unlockAudio();sovShow(+el.dataset.i);}));
   sovOv.classList.add('open');sovOv.setAttribute('aria-hidden','false');
   document.body.style.overflow='hidden';
   try{history.replaceState(null,'','#scene-'+key);}catch(e){}
@@ -1916,7 +1926,7 @@ document.getElementById('sovVoice').addEventListener('click',()=>{
   else playVoice(SCENES[sovScene].steps[sovStepIx]);
 });
 document.querySelectorAll('.scene[data-demo]').forEach(s=>{
-  s.addEventListener('click',()=>sovOpen(s.dataset.demo));
+  s.addEventListener('click',()=>{unlockAudio();sovOpen(s.dataset.demo);});
 });
 if('speechSynthesis' in window)speechSynthesis.getVoices();
 (function(){
