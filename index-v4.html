@@ -71,7 +71,7 @@ body::before{
 }
 
 /* 全局形态变幻背景（滚动随章节变色） */
-#bgfx{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bgfx{position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%}
 
 /* ============ SVG 图标系统 ============ */
 .ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;display:block}
@@ -153,8 +153,8 @@ h2 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;back
 [data-tilt]:hover::after{opacity:1}
 
 /* ============ 首屏 ============ */
-#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:120px;padding-bottom:80px;overflow:hidden}
-#stars{position:absolute;inset:0;z-index:0}
+#hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:120px;padding-bottom:80px;overflow:hidden}
+#stars{position:absolute;inset:0;z-index:0;width:100%;height:100%}
 .grid-bg{
   position:absolute;inset:0;z-index:0;pointer-events:none;
   background-image:
@@ -1060,6 +1060,83 @@ footer .fbrand{color:var(--text-dim)}
   .step h3{font-size:14.5px}
   .sd-pt p{font-size:12.5px}
 }
+/* ---- AI 客服（本地智能问答 · Xiaoxiao 同款女声）---- */
+#cs-fab{
+  position:fixed;right:18px;bottom:18px;z-index:1200;width:58px;height:58px;border-radius:50%;
+  border:1px solid rgba(77,227,193,.5);background:linear-gradient(150deg,#0d2b26,#071018);
+  color:var(--mint);cursor:pointer;display:grid;place-items:center;
+  box-shadow:0 14px 34px rgba(0,0,0,.5),0 0 24px rgba(77,227,193,.22);
+  transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s;
+  animation:fabBreath 3.2s ease-in-out infinite;
+}
+#cs-fab svg{width:24px;height:24px}
+#cs-fab:hover{transform:scale(1.08);box-shadow:0 18px 44px rgba(0,0,0,.55),0 0 34px rgba(77,227,193,.35)}
+@keyframes fabBreath{0%,100%{box-shadow:0 14px 34px rgba(0,0,0,.5),0 0 18px rgba(77,227,193,.18)}50%{box-shadow:0 14px 34px rgba(0,0,0,.5),0 0 30px rgba(77,227,193,.34)}}
+.cs-fab-tag{
+  position:absolute;right:64px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--mint);
+  background:rgba(7,16,24,.9);border:1px solid rgba(77,227,193,.35);
+  padding:6px 10px;border-radius:99px;white-space:nowrap;pointer-events:none;
+}
+#cs-panel{
+  position:fixed;right:18px;bottom:88px;z-index:1200;width:min(384px,calc(100vw - 24px));
+  height:min(600px,76vh);display:flex;flex-direction:column;
+  background:rgba(7,11,17,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(120,160,200,.22);border-radius:20px;overflow:hidden;
+  box-shadow:0 34px 80px rgba(0,0,0,.6);
+  opacity:0;visibility:hidden;transform:translateY(24px) scale(.97);
+  transition:.38s cubic-bezier(.16,1,.3,1);
+}
+#cs-panel.open{opacity:1;visibility:visible;transform:none}
+.cs-head{display:flex;align-items:center;gap:11px;padding:15px 16px;border-bottom:1px solid rgba(120,160,200,.14);flex-shrink:0}
+.cs-dot{width:8px;height:8px;border-radius:50%;background:#3ddc84;box-shadow:0 0 10px rgba(61,220,132,.8);flex-shrink:0;animation:blink 1.6s ease-in-out infinite}
+.cs-title b{font-size:14.5px;letter-spacing:.05em;display:block}
+.cs-title span{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--text-faint)}
+.cs-head button{
+  width:34px;height:34px;border-radius:10px;border:1px solid rgba(120,160,200,.2);
+  background:transparent;color:var(--text-dim);cursor:pointer;display:grid;place-items:center;transition:.25s;flex-shrink:0;
+}
+.cs-head button:hover{color:var(--mint);border-color:rgba(77,227,193,.45)}
+.cs-head button.off{color:var(--text-faint);opacity:.6}
+.cs-head .cs-voice{margin-left:auto}
+.cs-head .ic{width:16px;height:16px}
+.cs-msgs{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:12px}
+.cs-msgs::-webkit-scrollbar{width:4px}
+.cs-msgs::-webkit-scrollbar-thumb{background:rgba(77,227,193,.3);border-radius:2px}
+.cs-msg{max-width:86%;padding:11px 14px;border-radius:14px;font-size:13.5px;line-height:1.8;white-space:pre-wrap;animation:csIn .4s cubic-bezier(.16,1,.3,1)}
+@keyframes csIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.cs-msg.ai{align-self:flex-start;background:rgba(255,255,255,.055);border:1px solid rgba(120,160,200,.14);border-bottom-left-radius:4px;color:var(--text)}
+.cs-msg.me{align-self:flex-end;background:linear-gradient(135deg,rgba(77,227,193,.22),rgba(30,90,140,.3));border:1px solid rgba(77,227,193,.3);border-bottom-right-radius:4px}
+.cs-typing{display:inline-flex;gap:4px;align-items:center;padding:4px 2px}
+.cs-typing i{width:5px;height:5px;border-radius:50%;background:var(--mint);animation:csJump 1s ease-in-out infinite}
+.cs-typing i:nth-child(2){animation-delay:.15s}
+.cs-typing i:nth-child(3){animation-delay:.3s}
+@keyframes csJump{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-5px);opacity:1}}
+.cs-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 14px 10px;flex-shrink:0}
+.cs-chips button{
+  font-size:12px;padding:7px 13px;border-radius:99px;cursor:pointer;
+  border:1px solid rgba(77,227,193,.35);background:rgba(77,227,193,.06);color:var(--mint);
+  letter-spacing:.04em;transition:.25s;font-family:var(--sans);
+}
+.cs-chips button:hover{background:rgba(77,227,193,.16)}
+.cs-inputbar{display:flex;gap:9px;padding:12px 14px;border-top:1px solid rgba(120,160,200,.14);flex-shrink:0}
+#csInput{
+  flex:1;padding:12px 15px;border-radius:12px;border:1px solid rgba(120,160,200,.22);
+  background:rgba(255,255,255,.04);color:var(--text);font-size:13.5px;font-family:var(--sans);outline:none;transition:.25s;
+}
+#csInput:focus{border-color:rgba(77,227,193,.5)}
+#csInput::placeholder{color:var(--text-faint)}
+#csSend{
+  padding:0 20px;border-radius:12px;border:none;cursor:pointer;
+  background:var(--grad);color:#04211b;font-weight:700;font-size:13px;letter-spacing:.1em;transition:.25s;
+}
+#csSend:hover{filter:brightness(1.12)}
+@media(max-width:640px){
+  #cs-fab{width:52px;height:52px;right:14px;bottom:14px}
+  .cs-fab-tag{display:none}
+  #cs-panel{right:0;bottom:0;width:100vw;height:100dvh;border-radius:0;border:none}
+  .cs-msg{max-width:90%;font-size:14px}
+}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rv,.ch{opacity:1!important;transform:none!important;filter:none!important}
@@ -1567,32 +1644,38 @@ const io2=new IntersectionObserver(es=>{
 },{threshold:.4});
 document.querySelectorAll('section[id]').forEach(s=>io2.observe(s));
 
-/* ============ 首屏粒子网络 ============ */
+/* ============ 首屏粒子网络（待机常驻 · 铺满全屏 · 缓慢旋转） ============ */
 const cv=document.getElementById('stars');
 const ctx=cv.getContext('2d');
-let pts=[],mouse={x:-9999,y:-9999};
-const RM=120;
+let pts=[],mouse={x:-9999,y:-9999},W=0,H=0,LINK=140;
+const RM=130;
 function resize(){
-  const dpr=devicePixelRatio||1;
-  cv.width=cv.offsetWidth*dpr;cv.height=cv.offsetHeight*dpr;
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const r=cv.getBoundingClientRect();
+  W=r.width||innerWidth;H=r.height||innerHeight;
+  CX=W/2;CY=H/2;
+  LINK=W<760?92:Math.max(130,Math.min(170,W*.13));
+  cv.width=Math.max(1,Math.round(W*dpr));cv.height=Math.max(1,Math.round(H*dpr));
   ctx.setTransform(dpr,0,0,dpr,0,0);
-  const n=Math.min(70,Math.floor(cv.offsetWidth/18));
+  const n=Math.min(120,Math.max(50,Math.floor(W*H/15000)));
   pts=Array.from({length:n},()=>({
-    x:Math.random()*cv.offsetWidth,y:Math.random()*cv.offsetHeight,
-    vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.6+.6
+    x:Math.random()*W,y:Math.random()*H,
+    vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.6+.6
   }));
 }
 resize();addEventListener('resize',resize);
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(resize).observe(cv);
 addEventListener('pointermove',e=>{
   const r=cv.getBoundingClientRect();
   mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;
 },{passive:true});
 function tick(){
-  ctx.clearRect(0,0,cv.offsetWidth,cv.offsetHeight);
+  ctx.clearRect(0,0,W,H);
   for(const p of pts){
     p.x+=p.vx;p.y+=p.vy;
-    if(p.x<0||p.x>cv.offsetWidth)p.vx*=-1;
-    if(p.y<0||p.y>cv.offsetHeight)p.vy*=-1;
+    /* 缓慢漂移，独立运行：出界从对边环绕，保证任何时刻都铺满全屏 */
+    if(p.x<-20)p.x=W+20;else if(p.x>W+20)p.x=-20;
+    if(p.y<-20)p.y=H+20;else if(p.y>H+20)p.y=-20;
     const md=Math.hypot(p.x-mouse.x,p.y-mouse.y);
     if(md<RM&&md>0){p.x+=(p.x-mouse.x)/md*.5;p.y+=(p.y-mouse.y)/md*.5;}
     ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);
@@ -1600,9 +1683,9 @@ function tick(){
   }
   for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
     const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
-    if(d<130){
+    if(d<LINK){
       ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
-      ctx.strokeStyle=`rgba(100,190,190,${(1-d/130)*.22})`;
+      ctx.strokeStyle=`rgba(100,190,190,${(1-d/LINK)*.22})`;
       ctx.lineWidth=1;ctx.stroke();
     }
   }
@@ -1974,7 +2057,6 @@ chainFlow.addEventListener('pointermove',e=>{
 
 /* ============ 全局形态变幻背景（参考 mdx.so · 滚动随章节变幻）============ */
 const bgfx=document.getElementById('bgfx');
-const bctx=bgfx.getContext('2d');
 const PALETTES={
   hero:[[16,120,108],[30,70,140],[77,227,193]],
   chance:[[20,100,150],[16,110,100],[127,178,255]],
@@ -1990,6 +2072,7 @@ const PALETTES={
 let curPal=PALETTES.hero.map(c=>[...c]);
 let tgtPal=PALETTES.hero.map(c=>[...c]);
 let pulse=0;
+let bgMorphRandom=null; /* 由 WebGL 背景模块注册：翻页时随机切换形态 */
 const secIds=Object.keys(PALETTES);
 let activeSec='hero';
 function detectSection(){
@@ -2004,191 +2087,118 @@ function detectSection(){
   if(best!==activeSec){
     activeSec=best;tgtPal=PALETTES[best].map(c=>[...c]);pulse=1;
     /* 翻页随机变换形态（不与当前重复） */
-    if(SHAPES.length>1){
-      let nx=shapeIx;
-      while(nx===shapeIx)nx=Math.floor(Math.random()*SHAPES.length);
-      setShape(nx);
-    }
+    if(bgMorphRandom)bgMorphRandom();
   }
 }
 addEventListener('scroll',detectSection,{passive:true});
 function sizeBg(){bgfx.width=innerWidth;bgfx.height=innerHeight;}
 sizeBg();addEventListener('resize',sizeBg);
-/* 流动光痕粒子（氛围层） */
-const STREAK_N=innerWidth<760?24:46;
-const streaks=Array.from({length:STREAK_N},()=>{
-  const x=Math.random()*innerWidth,y=Math.random()*innerHeight;
-  return {x,y,px:x,py:y,life:200+Math.random()*300};
-});
-/* 粒子形态变换：圆环 → DNA 双螺旋 → 大脑 → 不规则流体 */
-const P_N=innerWidth<760?420:1080;
-const parts=Array.from({length:P_N},()=>({
-  x:Math.random()*innerWidth,y:Math.random()*innerHeight,
-  px:0,py:0,vx:0,vy:0,
-  ox:(Math.random()-.5)*.05,oy:(Math.random()-.5)*.05,
-  sp:.75+Math.random()*.5,
-  ph:Math.random()*6.283,
-  ci:Math.random()<.72?2:(Math.random()<.5?0:1)
-}));
-const SHAPES=['ring','dna','brain','flow'];
-let shapeIx=0,shapeHold=0;
-/* 形态切换时的「散开-重聚」爆发冲量 */
-function burst(){
-  const cx0=innerWidth*.5,cy0=innerHeight*.46,k0=innerWidth<760?.55:1;
-  for(const p of parts){
-    const dx=p.x-cx0,dy=p.y-cy0;
-    const d=Math.hypot(dx,dy)||1;
-    const k=(3+Math.random()*6)*k0;
-    p.vx+=dx/d*k+(Math.random()-.5)*8*k0;
-    p.vy+=dy/d*k+(Math.random()-.5)*8*k0;
+/* ---- WebGL 粒子背景（移植 particle-world：DNA 基因链 / 协作圆环 / 能力聚合体，GPU 渲染）---- */
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const gl=bgfx.getContext('webgl',{alpha:true,antialias:false,premultipliedAlpha:true});
+if(!gl){
+  bgfx.style.display='none';
+}else{
+const VS=`precision highp float;
+attribute vec3 aSeed;uniform float uTime,uAspect,uDpr,uFrom,uTo,uMix,uMobile,uPointer,uPass,uScale;uniform vec3 uCool,uWarm;
+varying float vAlpha;varying vec3 vColor;
+float hash(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}
+vec3 flow(vec3 p,float t){return vec3(sin(p.y*2.4+t)*cos(p.z*1.7-t*.6),sin(p.z*2.1-t*.7)*cos(p.x*2.+t*.3),sin(p.x*2.6+t*.5)*cos(p.y*1.8-t*.8));}
+mat2 rotation(float a){return mat2(cos(a),-sin(a),sin(a),cos(a));}
+vec3 shape(float mode,vec3 s){float a=s.x*6.2831853;float k=hash(s*71.);float b=s.y*6.2831853;vec3 p;
+if(mode<.5){float t=s.x;float ang=t*12.56637+uTime*.12;float y=(t-.5)*2.12;float side=step(.5,s.y)*2.-1.;vec3 center=vec3(cos(ang)*.39*side,y,sin(ang)*.39*side);float tube=.093;vec3 radial=vec3(cos(ang),0,sin(ang));p=center+radial*cos(k*6.28318)*tube+vec3(0,sin(k*6.28318)*tube,0);
+if(s.z<.28){t=floor(t*13.)/13.;ang=t*12.56637+uTime*.12;y=(t-.5)*2.12;p=vec3(cos(ang)*(s.y-.5)*.78,y,sin(ang)*(s.y-.5)*.78);p+=vec3(-sin(ang)*cos(k*6.28),sin(k*6.28),cos(ang)*cos(k*6.28))*.036;}
+p.xz=rotation(-.2)*p.xz;p.xy=rotation(-.14)*p.xy;
+}else if(mode<1.5){float tube=.22*(.88+.12*sin(a*3.+uTime*.6));float r=.72+cos(b)*tube;p=vec3(cos(a)*r,sin(a)*r,sin(b)*tube);p.yz=rotation(.38+sin(uTime*.16)*.1)*p.yz;p.xy=rotation(-.28)*p.xy;
+}else if(mode<2.5){float z=s.y*2.-1.;float rad=sqrt(1.-z*z);p=vec3(cos(a)*rad,z,sin(a)*rad)*.86;float n=.5+.25*sin(p.x*3.+uTime*.13)*cos(p.y*3.7-uTime*.1)+.15*sin(p.z*4.4+p.x*2.);p*=.89+n*.22;
+}else if(mode<3.5){float th=a;float rr=1.+.15*sin(3.*th+.5)+.08*sin(5.*th+2.)+.05*cos(7.*th);float xx=cos(th)*rr*1.12;float yy=sin(th)*rr*.9;if(yy>.5)yy=.5+(yy-.5)*.35;p=vec3(xx,yy,.16*sin(xx*3.2+uTime*.2)*cos(yy*4.1));p.xy=rotation(.06+sin(uTime*.15)*.05)*p.xy;
+}else if(mode<4.5){float rr=1.+.26*sin(2.*a+uTime*.55)+.15*sin(3.*a-uTime*.4)+.09*sin(5.*a+uTime*.85);p=vec3(cos(a)*rr,sin(a)*rr,.13*sin(a*3.-uTime*.3));p.xy=rotation(-.1)*p.xy;
+}else{float d=s.x;float z=mix(-1.,1.,d);float rr=.10+.85*d*(.9+.1*sin(uTime*1.1));float aa=s.y*6.2831853+uTime*(.25+d*.9);p=vec3(cos(aa)*rr,sin(aa)*rr,z*.72);p.xy=rotation(-.12)*p.xy;p.z+=.06*sin(uTime*.9+d*6.28);}
+float n=sin(p.x*8.+uTime*.18+sin(p.z*4.))*cos(p.y*7.-uTime*.12)*.5;p+=normalize(p+vec3(.01))*n*.032;p+=flow(p*1.8,uTime*.25)*.014;return p;}
+void main(){float stagger=(aSeed.z-.5)*.16;float m=smoothstep(0.,1.,clamp((uMix-stagger)/.92,0.,1.));float burst=sin(m*3.14159265);vec3 pa=shape(uFrom,aSeed),pb=abs(uFrom-uTo)<.1?pa:shape(uTo,aSeed);vec3 p=mix(pa,pb,m);
+p+=flow(p*1.6+aSeed*1.5,uTime*.24)*burst*.66;p+=normalize(vec3(hash(aSeed*41.)-.5,hash(aSeed*73.)-.5,hash(aSeed*97.)-.5))*burst*.18;
+float shell=step(.83,aSeed.z);p+=flow(p*2.,uTime*.37)*shell*(.028+.05*(.5+.5*sin(uTime*.7+aSeed.x*6.28)));p*=1.+shell*1.4;p*=1.+sin(uTime*.9)*.035;
+if(uPass<.5){p*=1.3;p+=flow(p*.85+aSeed*1.7,uTime*.06)*.5;}
+float rot=sin(uTime*.17)*.26;p.xz=rotation(rot+uPointer*.1)*p.xz;p.x+=uPointer*.025;float depth=1./(1.-p.z*.14);float scale=uScale;gl_Position=vec4(p.x*scale/uAspect*depth,p.y*scale*depth,0.,1.);
+float grain=hash(aSeed*23.);float front=smoothstep(-.6,.7,p.z);float warm=exp(-dot(p.xy,p.xy)*3.5)*(.45+.55*front);vColor=mix(uCool,uWarm,warm*.95);
+if(uPass<.5){gl_PointSize=(5.+grain*6.)*uDpr;vAlpha=.03*(.55+front*.45)*(1.-burst*.45)*(1.-.45*smoothstep(.6,1.8,length(p.xy)));}
+else{gl_PointSize=(1.+grain*1.05)*uDpr;vAlpha=(.2+grain*.42)*(.35+front*.65)*(1.-burst*.3)*(1.-shell*.32)*(.72+.28*sin(uTime*(1.8+grain*2.6)+grain*40.));vColor=mix(vColor,vec3(1.),.7);}
+}`;
+const FS=`precision highp float;uniform float uPass;varying float vAlpha;varying vec3 vColor;void main(){float d=length(gl_PointCoord-.5)*2.;if(d>1.)discard;float a=uPass<.5?exp(-d*d*4.)*(1.-smoothstep(.7,1.,d)):1.-smoothstep(.25,1.,d);gl_FragColor=vec4(vColor,a*vAlpha);}`;
+let prog=null;
+try{
+  const sh=(type,src)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s};
+  prog=gl.createProgram();
+  gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));
+  gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));
+  gl.linkProgram(prog);
+  if(!gl.getProgramParameter(prog,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(prog));
+}catch(e){bgfx.style.display='none';console.error(e);}
+if(prog){
+  gl.useProgram(prog);
+  const COUNT=innerWidth<760?26000:72000;
+  const arr=new Float32Array(COUNT*3);let seed=314159;
+  for(let i=0;i<arr.length;i++){seed=(Math.imul(seed,1664525)+1013904223)>>>0;arr[i]=seed/4294967296;}
+  const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,arr,gl.STATIC_DRAW);
+  const attr=gl.getAttribLocation(prog,'aSeed');
+  gl.enableVertexAttribArray(attr);gl.vertexAttribPointer(attr,3,gl.FLOAT,false,0,0);
+  gl.enable(gl.BLEND);gl.blendFuncSeparate(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA,gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const UNI={};['uTime','uAspect','uDpr','uFrom','uTo','uMix','uMobile','uPointer','uPass','uScale','uCool','uWarm'].forEach(k=>UNI[k]=gl.getUniformLocation(prog,k));
+  let aspect=1,dpr=1,pointer=0,tPointer=0;
+  function sizeGL(){
+    dpr=Math.min(devicePixelRatio||1,1.5);
+    const w=Math.round(innerWidth*dpr),h=Math.round(innerHeight*dpr);
+    if(bgfx.width!==w||bgfx.height!==h){bgfx.width=w;bgfx.height=h;}
+    aspect=innerWidth/innerHeight;
+    gl.viewport(0,0,bgfx.width,bgfx.height);
   }
+  sizeGL();addEventListener('resize',sizeGL);
+  addEventListener('pointermove',e=>{tPointer=e.clientX/innerWidth*2-1;},{passive:true});
+  let from=0,to=0,elapsed=0,moving=false,last=0,clock=0,hold=5.2,combo=0;
+  /* 形态：0 DNA / 1 圆环 / 2 聚合体 / 3 大脑 / 4 流体 / 5 隧道散开（点击触发） */
+  const pickSolid=()=>{let n;do{n=Math.floor(Math.random()*5);}while(n===to);return n;};
+  bgMorphRandom=()=>{
+    if(moving)return;
+    from=to;to=pickSolid();elapsed=0;moving=true;hold=5.2;
+  };
+  /* 点击页面：粒子散开成隧道；再点聚回随机实体形态；连点叠加「充能」加速（点按钮/链接/输入框不触发） */
+  let pd=null;
+  addEventListener('pointerdown',e=>{
+    if(window.innerWidth<760&&e.target.closest('.scene'))return;
+    if(e.target.closest('a,button,input,textarea,select,#cs-panel,#cs-fab,.window,.sov-head,.chain-track'))return;
+    pd={x:e.clientX,y:e.clientY};
+  },{passive:true});
+  /* 手机适配：滑动页面松手位移 >12px 不算点击，避免滚动误触散开/充能 */
+  addEventListener('pointerup',e=>{
+    if(!pd)return;
+    const moved=Math.hypot(e.clientX-pd.x,e.clientY-pd.y);pd=null;
+    if(moved>12)return;
+    combo=Math.min(combo+1,10);
+    if(moving)return;
+    from=to;elapsed=0;moving=true;
+    if(to===5){to=pickSolid();hold=5.2;}
+    else{to=5;hold=3.4;}
+  },{passive:true});
+  (function loop(t){
+    requestAnimationFrame(loop);
+    const dt=last?Math.min((t-last)/1000,.4):0;last=t;
+    if(document.hidden||reduceMotion.matches)return;
+    clock+=dt*(1+combo*.16);elapsed+=dt*(1+combo*.16);combo=Math.max(0,combo-dt*.55);pulse*=.985;
+    detectSection();
+    curPal=curPal.map((c,i)=>c.map((v,j)=>v+(tgtPal[i][j]-v)*.055));
+    if(moving&&elapsed>=4.8){moving=false;from=to;elapsed=0;}
+    else if(!moving&&elapsed>=hold){from=to;to=(to+1)%5;elapsed=0;moving=true;hold=5.2;}
+    pointer+=(tPointer-pointer)*.04;
+    gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
+    const vals={uTime:clock,uAspect:aspect,uDpr:dpr,uFrom:from,uTo:to,uMix:moving?Math.min(elapsed/4.8,1):0,uMobile:innerWidth<760?1:0,uPointer:pointer,uScale:innerWidth<760?Math.min(.56,innerWidth/innerHeight*.82):.76};
+    Object.entries(vals).forEach(([k,v])=>gl.uniform1f(UNI[k],v));
+    gl.uniform3f(UNI.uCool,curPal[1][0]/255,curPal[1][1]/255,curPal[1][2]/255);
+    gl.uniform3f(UNI.uWarm,curPal[2][0]/255,curPal[2][1]/255,curPal[2][2]/255);
+    gl.uniform1f(UNI.uPass,0);gl.drawArrays(gl.POINTS,0,COUNT);
+    gl.uniform1f(UNI.uPass,1);gl.drawArrays(gl.POINTS,0,COUNT);
+  })(0);
 }
-function setShape(nx){
-  if(nx===shapeIx)return;
-  shapeIx=nx;shapeHold=0;burst();
 }
-/* 双态机制：平时散开待机，滚动/点击页面才聚成实体形态，静置 5 秒自动散开 */
-let pMode='solid',idleT=0;
-function wakeSolid(rand){
-  idleT=0;
-  const wasIdle=pMode!=='solid';
-  pMode='solid';
-  if(wasIdle&&rand&&SHAPES.length>1){
-    let nx=shapeIx;
-    while(nx===shapeIx)nx=Math.floor(Math.random()*SHAPES.length);
-    setShape(nx);
-  }
-}
-addEventListener('scroll',()=>wakeSolid(false),{passive:true});
-addEventListener('pointerdown',()=>wakeSolid(true),{passive:true});
-function shapeTarget(i,n,t,s){
-  const u=i/n,a=u*Math.PI*2;
-  if(s==='ring'){
-    const r=1+.05*Math.sin(t*2+i*.31);
-    return[Math.cos(a+t*.14)*r,Math.sin(a+t*.14)*r];
-  }
-  if(s==='dna'){
-    /* 真 3D 双螺旋：sin 定横向，cos 定前后景深，整体同相旋转 */
-    if(u<.7){
-      const p=u/.7,strd=i%2;
-      const ang=p*Math.PI*5.2+t*1.3+strd*Math.PI;
-      const y=(p*2-1)*1.18;
-      const x=Math.sin(ang)*.55;
-      return[x,y,Math.cos(ang)];
-    }
-    /* 横档：11 条，连接两链对应点，共享同一相位与景深 */
-    const p=(u-.7)/.3;
-    const rung=Math.min(10,Math.floor(p*11));
-    const fr=p*11-rung;
-    const ang=((rung+.5)/11)*Math.PI*5.2+t*1.3;
-    const y=(((rung+.5)/11)*2-1)*1.18;
-    const x=Math.sin(ang)*(fr*2-1)*.55;
-    return[x,y,Math.cos(ang)];
-  }
-  if(s==='brain'){
-    if(u<.7){
-      const th=a;
-      const r=1+.15*Math.sin(3*th+.5)+.08*Math.sin(5*th+2)+.05*Math.cos(7*th);
-      let x=Math.cos(th)*r*1.12,y=Math.sin(th)*r*.9;
-      if(y>.5)y=.5+(y-.5)*.35;
-      return[x,y];
-    }
-    const p=(u-.7)/.3,f=i%5;
-    const bx=(p*2-1)*.8;
-    const by=(-.46+f*.23)+Math.sin(p*Math.PI*2.2+f*1.7+t*.5)*.1;
-    return[bx,by];
-  }
-  const r=1+.26*Math.sin(2*a+t*.55)+.15*Math.sin(3*a-t*.4)+.09*Math.sin(5*a+t*.85);
-  return[Math.cos(a)*r,Math.sin(a)*r];
-}
-let bgT=0;
-function blob(x,y,r,col,a){
-  const g=bctx.createRadialGradient(x,y,0,x,y,r);
-  g.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},${a})`);
-  g.addColorStop(1,'rgba(0,0,0,0)');
-  bctx.fillStyle=g;
-  bctx.fillRect(x-r,y-r,r*2,r*2);
-}
-function drawStreaks(W,H){
-  bctx.lineWidth=1.2;
-  const acc=curPal[2];
-  bctx.strokeStyle=`rgba(${acc[0]},${acc[1]},${acc[2]},.22)`;
-  for(const s of streaks){
-    const ang=Math.sin(s.x*.0018+bgT*2.4)*1.6+Math.cos(s.y*.002-bgT*1.7)*1.6;
-    s.px=s.x;s.py=s.y;
-    s.x+=Math.cos(ang)*2.2;s.y+=Math.sin(ang)*2.2;
-    s.life--;
-    if(s.life<0||s.x<-20||s.x>W+20||s.y<-20||s.y>H+20){
-      s.x=Math.random()*W;s.y=Math.random()*H;s.px=s.x;s.py=s.y;s.life=200+Math.random()*300;
-    }
-    bctx.beginPath();bctx.moveTo(s.px,s.py);bctx.lineTo(s.x,s.y);bctx.stroke();
-  }
-}
-function bgFrame(){
-  bgT+=.016;
-  detectSection();
-  pulse*=.985;
-  bctx.clearRect(0,0,bgfx.width,bgfx.height);
-  curPal=curPal.map((c,i)=>c.map((v,j)=>v+(tgtPal[i][j]-v)*.055));
-  const W=bgfx.width,H=bgfx.height;
-  /* 两团底部氛围光晕 */
-  blob(W*.3,H*.3,Math.min(W,H)*.5,curPal[0],.15+pulse*.14);
-  blob(W*.75,H*.7,Math.min(W,H)*.45,curPal[1],.13+pulse*.12);
-  /* 每 7 秒切换一次形态，粒子自动重组 */
-  /* 实体态计时：静置 5 秒散开待机；待机时形态轮换暂停 */
-  if(pMode==='solid'){
-    shapeHold++;
-    idleT++;
-    if(idleT>300){pMode='idle';burst();}
-    if(shapeHold>440)setShape((shapeIx+1)%SHAPES.length);
-  }
-  const S0=Math.min(W,H)*.28,cx=W*.5,cy=H*.46;
-  /* 全局呼吸：粒子持续散开-聚集 */
-  const S=S0*(1+Math.sin(bgT*.55)*.07);
-  const acc=curPal[2];
-  bctx.lineWidth=1;
-  for(let i=0;i<P_N;i++){
-    const p=parts[i];
-    /* 合理排布：实体态 75% 组成主形态；待机态全体散开；25% 常驻背景星尘 */
-    let tg,amb=false;
-    if(i%4===3||pMode!=='solid'){
-      amb=(i%4===3);
-      const ang2=i*2.399963+bgT*.05;
-      const rr=.55+.8*((i%89)/89);
-      tg=[Math.cos(ang2)*2.3*rr,Math.sin(ang2)*1.7*rr];
-    }else{
-      tg=shapeTarget(i,P_N,bgT,SHAPES[shapeIx]);
-    }
-    /* DNA 等形态返回第三维景深：前景亮、后景暗 */
-    let df=1;
-    if(tg.length>2)df=.38+.62*(tg[2]*.5+.5);
-    /* 日常跳动：双频抖动让粒子持续微微跳跃 */
-    const jx=Math.sin(bgT*3.1*p.sp+p.ph)*.02+Math.sin(bgT*7.7+p.ph*2.3)*.009;
-    const jy=Math.cos(bgT*2.6*p.sp+p.ph)*.02+Math.cos(bgT*6.3+p.ph*1.7)*.009;
-    const tx=cx+(tg[0]+jx)*S+p.ox*S,ty=cy+(tg[1]+jy)*S+p.oy*S;
-    p.px=p.x;p.py=p.y;
-    p.x+=(tx-p.x)*.045+p.vx;
-    p.y+=(ty-p.y)*.045+p.vy;
-    p.vx*=.9;p.vy*=.9;
-    if(amb){
-      bctx.fillStyle=`rgba(${acc[0]},${acc[1]},${acc[2]},.16)`;
-      bctx.beginPath();bctx.arc(p.x,p.y,.9,0,6.2832);bctx.fill();
-      continue;
-    }
-    /* 重组时的移动轨迹 */
-    bctx.strokeStyle=`rgba(${acc[0]},${acc[1]},${acc[2]},.13)`;
-    bctx.beginPath();bctx.moveTo(p.px,p.py);bctx.lineTo(p.x,p.y);bctx.stroke();
-    /* 辉光 + 亮芯（景深调亮，轻量化不抢文字） */
-    bctx.fillStyle=`rgba(${acc[0]},${acc[1]},${acc[2]},${(.05*df).toFixed(3)})`;
-    bctx.beginPath();bctx.arc(p.x,p.y,3.6*df+.4,0,6.2832);bctx.fill();
-    const c=curPal[p.ci];
-    bctx.fillStyle=`rgba(${c[0]},${c[1]},${c[2]},${(.55*df).toFixed(3)})`;
-    bctx.beginPath();bctx.arc(p.x,p.y,1.15*df+.25,0,6.2832);bctx.fill();
-  }
-  drawStreaks(W,H);
-}
-function bgLoop(){bgFrame();requestAnimationFrame(bgLoop);}
-if(!matchMedia('(prefers-reduced-motion:reduce)').matches)bgLoop();else bgFrame();
 
 /* ---- Noomo 式切进切出观察器：进屏切入，出屏切出 ----
    阈值用 0 + 底部内缩 12%：按「顶边越过触发线」判断，
@@ -2366,6 +2376,155 @@ const dashIO=new IntersectionObserver(es=>{
   });
 },{threshold:.3});
 dashIO.observe(dashEl);
+</script>
+
+<!-- ═══════════ AI 客服 ═══════════ -->
+<button id="cs-fab" aria-label="打开 AI 客服">
+  <svg class="ic"><use href="#i-chat"/></svg>
+  <span class="cs-fab-tag">AI 客服</span>
+</button>
+<div id="cs-panel" aria-hidden="true" role="dialog" aria-label="AI 客服">
+  <div class="cs-head">
+    <span class="cs-dot"></span>
+    <div class="cs-title"><b>AI 客服</b><span>ONLINE · 即时解答</span></div>
+    <button class="cs-voice" id="csVoiceBtn" title="语音播报开关"><svg class="ic"><use href="#i-mic"/></svg></button>
+    <button id="csClose" title="收起">✕</button>
+  </div>
+  <div class="cs-msgs" id="csMsgs"></div>
+  <div class="cs-chips" id="csChips"></div>
+  <div class="cs-inputbar">
+    <input id="csInput" placeholder="问问 AI 客服…" autocomplete="off" maxlength="120">
+    <button id="csSend">发送</button>
+  </div>
+</div>
+
+<script>
+/* ============ AI 客服：本地知识库 + 意图匹配 + 女声播报 ============ */
+const CS_KB=[
+ {k:['介绍','是什么','干嘛','做什么','你们','服务内容','介绍一下'],s:['引流获客','销售成交','降本增效','数据采集'],
+  a:'我们做的是「企业 AI 定制赋能」：不是卖一个通用工具，而是把 AI 员工装进你现有的业务流程里——引流获客、销售成交、降本增效、数据采集四大场景，嵌入后立刻替团队接手重复劳动。\n\n你最想先了解哪个场景？点下面的快捷问题～'},
+ {k:['引流','获客','流量','爆款','仿写','矩阵','小红书','抖音'],s:['怎么收费','多久落地'],
+  a:'引流获客这样跑：看到爆款内容，把链接粘贴进来 → AI 自动拆解它的钩子、结构、卖点，仿写出你的同款文案和拍摄脚本 → 公域发小红书、抖音、视频号，私域覆盖朋友圈，矩阵账号一键分发。\n\n一条内容喂饱整个账号矩阵，数据自动回流。'},
+ {k:['销售','成交','签单','转化','客户跟进','数字分身'],s:['数据安全','怎么收费'],
+  a:'销售成交靠「金牌销售数字分身」：先把团队里最强销售的整套打法原样记录下来，沉淀成企业资产；之后资料调用、客户分析、策略生成全部由 AI 接手，人只需要拍板决策。\n\n就算销售离职，经验和打法也留在公司。'},
+ {k:['降本','增效','成本','行业','教培','律所','建筑','行政','人事','财税'],s:['适合什么企业','怎么开始合作'],
+  a:'降本增效按行业给对口方案：教培的课件讲义与学员答疑、律所的卷宗摘要与合同初审、建筑的投标文书与施工日报、行政人事财税的周报报销——每个行业最耗人的重复劳动，都有一套对应的 AI 流程。\n\n你的团队人手最紧的环节是哪一块？'},
+ {k:['录音','会议','纪要','数据采集','资料','归档','档案','记忆库'],s:['数据安全','适合什么企业'],
+  a:'数据采集是企业的记忆中枢：开会录个音，纪要和待办自动生成；客户、项目、合同、会议记录统一归档，随取随用；任务直接下达、进展自动回流；数据沉淀越多，决策方向越清晰。\n\n录音总结只是入口，背后的企业记忆库才是重点。'},
+ {k:['多少钱','收费','价格','报价','费用','贵','成本多少','预算','39800','59800'],s:['怎么开始合作','多久落地'],
+  a:'产品落地价格 39,800 起；根据业务不同，整体方案在 39,800～59,800 起的区间。\n\n具体先通过「诊断 → 方案 → 试点」梳理你最值得 AI 化的环节，按场景出方案，不为用不上的功能买单。\n\n页面底部有「开始转型」入口，聊聊团队现状，就能拿到针对性方案和报价～'},
+ {k:['多久','时间','落地','上线','周期','快吗','一周'],s:['怎么开始合作','和市面工具的区别'],
+  a:'主打「快速落地、持续积累」：先挑一个小场景试点跑通，再逐步铺开——不搞大动干戈的改造，尽量一周内让第一个场景跑起来。\n\n落地只是开始，数据持续沉淀，AI 会越用越懂你的业务。'},
+ {k:['安全','隐私','泄密','保密','数据安全'],s:['销售成交','数据采集'],
+  a:'数据安全两条底线：① AI 只在你授权的范围内工作，边界清晰；② 过程产生的资料沉淀在「企业记忆库」，属于公司资产——员工离职，经验和数据都留在公司，不跟人走。'},
+ {k:['适合','行业','规模','人数','团队','中小企业'],s:['降本增效','怎么开始合作'],
+  a:'最适合这类团队：重复性工作多（写内容、跟客户、整理资料）、想放大业务但人手有限的中小企业。内容、销售、行政密集型团队见效最快。\n\n可以说说你的行业和团队规模，我帮你判断合不合适～'},
+ {k:['区别','对比','市面','通用','chatgpt','deepseek','别的ai'],s:['介绍一下','怎么开始合作'],
+  a:'和市面通用 AI 工具的区别：通用工具是「人找答案」，用完就散；我们是把 AI 嵌进你的流程——它懂你的客户、你的话术、你的资料。\n\n核心理念是「不替换人，只放大人」，而且所有经验都沉淀为企业资产。'},
+ {k:['怎么开始','合作','流程','启动','联系','预约','咨询','报名'],s:['怎么收费','多久落地'],
+  a:'开始很简单：① 预约沟通，梳理业务流程 → ② 选一个最痛的场景做试点 → ③ 搭建上线、团队培训 → ④ 数据回流持续优化。\n\n页面底部有「开始转型」，填一下就能约到方案沟通～'},
+ {k:['ai员工','员工','助手','数字员工'],s:['介绍一下','引流获客'],
+  a:'「AI 员工」就是嵌入你业务流程的 AI 助手：它接手重复劳动——写文案、整理资料、生成跟进策略，产出直接进你的业务系统，而不是让你多开一个聊天窗口自己问。'},
+ {k:['数字资产','数据化','沉淀','公司数据','员工数据','个人数据','资产'],s:['介绍一下','降本增效'],
+  a:'我们帮企业做三层数据化：\n· 公司数据化——客户、项目、合同、会议记录统一归档进企业记忆库，随取随用；\n· 员工数据化——每个岗位的经验和打法被记录成可复用的企业资产，人走了经验留下；\n· 个人数据化——把每个人的重复劳动交给 AI，时间还给创造和决策。\n\n这些沉淀就是企业的数字资产，越积累越值钱——这正是迎接 AI 时代的底气。'},
+ {k:['优化人员','裁员','减员','人力','人效','招人','离职','组织'],s:['降本增效','怎么收费'],
+  a:'我们的理念是「不替换人，只放大人」：AI 接手的是重复劳动——写文案、整理资料、初步跟进，让员工从消耗性工作里解放出来，去做创造、决策和客户关系。\n\n同样的人手能承接更多业务，人效提升带来的人员结构优化是自然发生的——增效在先，而不是简单减人。'},
+ {k:['ai时代','趋势','时代','落后','未来','变化','风口'],s:['介绍一下','怎么开始合作'],
+  a:'AI 时代的企业分两种：一种把 AI 当玩具，一种把 AI 变成组织能力。我们做的就是后者——把 AI 员工装进业务流程，让公司在数据、人员、流程三个层面完成数据化。\n\n早落地的企业每天都在沉淀数字资产，晚一步差距会越拉越大。现在开始，就是最好的时机～'}
+];
+const CS_FALLBACK={s:['介绍一下','怎么收费','沉淀数字资产','多久落地','怎么开始合作'],
+  a:'这个问题有点超出我的知识范围啦～我可以聊这些：\n· 四大场景怎么跑（引流获客 / 销售成交 / 降本增效 / 数据采集）\n· 怎么收费、多久落地\n· 沉淀数字资产、公司/员工/个人数据化\n· 数据安不安全、和普通 AI 工具有什么区别\n点下面的快捷问题，或者换个问法试试？'};
+const CS_DEFAULT=['介绍一下','怎么收费','沉淀数字资产','多久落地','怎么开始合作'];
+const csFab=document.getElementById('cs-fab'),csPanel=document.getElementById('cs-panel'),
+      csMsgs=document.getElementById('csMsgs'),csChips=document.getElementById('csChips'),
+      csInput=document.getElementById('csInput'),csSendBtn=document.getElementById('csSend'),
+      csCloseBtn=document.getElementById('csClose'),csVoiceBtn=document.getElementById('csVoiceBtn');
+let csVoiceOn=true,csBusy=false;
+function csSpeak(txt){
+  if(!csVoiceOn||!('speechSynthesis' in window))return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(txt.replace(/\n+/g,'。'));
+    u.lang='zh-CN';u.rate=1.05;u.pitch=1.1;
+    const v=(function(){
+      const zh=speechSynthesis.getVoices().filter(v=>/^zh|cmn/i.test(v.lang));
+      return zh.find(v=>/xiaoxiao|xiaoyi|huihui|tingting|ting-ting|yaoyao|meijia|female|女/i.test(v.name))||null;
+    })();
+    if(v)u.voice=v; /* 没有中文女声就不播，宁缺毋滥 */
+    else return;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function csAdd(cls,html){
+  const d=document.createElement('div');
+  d.className='cs-msg '+cls;
+  csMsgs.appendChild(d);csMsgs.scrollTop=csMsgs.scrollHeight;
+  return d;
+}
+function csChipsRender(list){
+  csChips.innerHTML='';
+  (list||CS_DEFAULT).forEach(q=>{
+    const b=document.createElement('button');
+    b.textContent=q;
+    b.addEventListener('click',()=>csAsk(q));
+    csChips.appendChild(b);
+  });
+}
+function csMatch(q){
+  const s=q.toLowerCase();
+  let best=null,score=0;
+  for(const item of CS_KB){
+    let n=0;
+    for(const kw of item.k){if(s.includes(kw.toLowerCase()))n+=kw.length;}
+    if(n>score){score=n;best=item;}
+  }
+  return best||CS_FALLBACK;
+}
+function csAsk(q){
+  if(csBusy)return;
+  csBusy=true;
+  csAdd('me',q);
+  csInput.value='';
+  csChips.innerHTML='';
+  const t=csAdd('ai','<span class="cs-typing"><i></i><i></i><i></i></span>');
+  setTimeout(()=>{
+    const r=csMatch(q);
+    t.textContent='';
+    const full=r.a;let i=0;
+    const tm=setInterval(()=>{
+      i+=2;
+      t.textContent=full.slice(0,i);
+      csMsgs.scrollTop=csMsgs.scrollHeight;
+      if(i>=full.length){
+        clearInterval(tm);
+        csChipsRender(r.s);
+        csSpeak(full);
+        csBusy=false;
+      }
+    },22);
+  },550+Math.random()*400);
+}
+function csToggle(open){
+  csPanel.classList.toggle('open',open);
+  csPanel.setAttribute('aria-hidden',String(!open));
+  if(open&&!csMsgs.children.length){
+    setTimeout(()=>{
+      csAdd('ai','你好呀～我是这个页面的 AI 客服 🐱\n关于企业 AI 定制赋能，有什么想问的尽管问：\n场景怎么跑、怎么收费、多久落地都可以。');
+      csChipsRender(CS_DEFAULT);
+    },280);
+  }
+  if(!open&&'speechSynthesis' in window)speechSynthesis.cancel();
+}
+csFab.addEventListener('click',()=>csToggle(!csPanel.classList.contains('open')));
+csCloseBtn.addEventListener('click',()=>csToggle(false));
+csSendBtn.addEventListener('click',()=>csAsk(csInput.value));
+csInput.addEventListener('keydown',e=>{if(e.key==='Enter')csAsk(csInput.value);});
+csVoiceBtn.addEventListener('click',()=>{
+  csVoiceOn=!csVoiceOn;
+  csVoiceBtn.classList.toggle('off',!csVoiceOn);
+  if(!csVoiceOn&&'speechSynthesis' in window)speechSynthesis.cancel();
+});
+if('speechSynthesis' in window)speechSynthesis.getVoices();
 </script>
 </body>
 </html>
